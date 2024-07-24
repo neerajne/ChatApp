@@ -123,15 +123,16 @@ const addToGroup = expressAsyncHandler(async (req, res) => {
     .populate("users", "-password")
     .populate("groupAdmin", "-password");
 
+    const results = await Chat.findById({_id:chatId})
   if (addedUserToChat) {
-    res.status(200).send("user added to group");
+    res.status(200).send(results);
   } else {
     res.status(400);
     throw new Error("unable to add to the chat");
   }
 });
 
-const removeGroup = expressAsyncHandler(async (req, res) => {
+const removeFromGroup = expressAsyncHandler(async (req, res) => {
   const { chatId, removeUser } = req.body;
   const removeUserFromChat = await Chat.findByIdAndUpdate(
     chatId,
@@ -160,5 +161,5 @@ module.exports = {
   createGroupChat,
   renameGroupChat,
   addToGroup,
-  removeGroup,
+  removeFromGroup,
 };

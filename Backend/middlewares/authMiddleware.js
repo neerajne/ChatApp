@@ -3,6 +3,7 @@ const User = require("../models/userModel.js");
 const asyncHandler = require("express-async-handler");
 
 const protect = asyncHandler(async (req, res, next) => {
+  console.log("Headers received:", req.headers);
   let token;
   if (
     req.headers.authorization &&
@@ -12,10 +13,10 @@ const protect = asyncHandler(async (req, res, next) => {
       token = req.headers.authorization.split(" ")[1];
       console.log("Token:", token); // Log the token
 
-      const decoded = jwt.verify(token, "mysupersecretStringneeraj");
+      const decoded = jwt.verify(token, process.env.SECRET_KEY);
       console.log("Decoded:", decoded); // Log the decoded token
 
-      // Check if the decoded token contains the expected user ID
+      // Check if the decoded token contains the expec ted user ID
       if (!decoded || !decoded.iD) {
         console.log("Invalid token:", decoded);
         res.status(401);

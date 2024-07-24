@@ -19,6 +19,7 @@ const registerUser = asyncHandler(async (req, res) => {
     password,
     pic,
   });
+
   if (newUser) {
     res.status(200).json({
       id: newUser._id,
@@ -31,27 +32,28 @@ const registerUser = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("failed to create User");
   }
+    // console.log(newUser);
 });
 
 const authUser = asyncHandler(async (req, res) => {
-   console.log("Received login request. Body:", req.body);
+  console.log("Received login request. Body:", req.body);
   const { email, password } = req.body;
   // console.log("Extracted email:", email, "password:", password);
   // console.log(email, password);
   const existingUser = await User.findOne({ email });
-// console.log("existing user is " , existingUser)  
-
-   if (!existingUser) {
-     console.log(`User with email '${email}' not found.`);
-     res.status(401);
-     throw new Error("Invalid email or password");
-   }
+  // console.log("existing user is " , existingUser)
+  console.log(existingUser);
+  if (!existingUser) {
+    console.log(`User with email '${email}' not found.`);
+    res.status(401);
+    throw new Error("Invalid email or password");
+  }
   if (
     existingUser &&
     (await existingUser.matchPassword(password, existingUser.password))
   ) {
     // console.log(existingUser);
-  
+
     //becaus ethe match password is available for all the documents in the collection so here this user whom we are finding ios also a document
     res.status(200).json({
       id: existingUser._id,
@@ -66,10 +68,8 @@ const authUser = asyncHandler(async (req, res) => {
   }
 });
 
-
+//FOR SEARCHING THE USERS
 const allUsers = asyncHandler(async (req, res) => {
-  console.log("Search query:", req.query.search); // Log the search query
-
   const searchQuery = req.query.search || "";
 
   const search = searchQuery
@@ -81,10 +81,20 @@ const allUsers = asyncHandler(async (req, res) => {
       }
     : {};
 
+  console.log("Search query:", searchQuery); // Log the search query
   console.log("Search criteria:", JSON.stringify(search, null, 2)); // Log the search criteria
 
   try {
-    const users = await User.find(search).find({ _id: { $ne: req.user._id } });
+    // Add pagination
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const users = await User.find(search)
+      .find({ _id: { $ne: req.user._id } })
+      .skip(skip)
+      .limit(limit);
+
     console.log("Users found:", users); // Log the users found
     res.status(200).json(users);
   } catch (error) {

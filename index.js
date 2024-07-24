@@ -7,6 +7,7 @@ const connectDB = require("./Backend/models/mongooseConnection.js");
 const app = express();
 const userRoutes = require("./Backend/routes/userRoutes.js");
 const chatRoutes = require("./Backend/routes/chatRoutes.js");
+const messageRoutes = require("./Backend/routes/messageRoutes.js");
 
 const {
   notFound,
@@ -29,6 +30,9 @@ app.use("/api/users", userRoutes);
 
 // CHATS ROUTE
 app.use('/api/chats',chatRoutes) ;
+
+// MESSAGES ROUTE
+app.use('/api/messages',messageRoutes) ;
 
 
 //INDIVISUAL CHAT
