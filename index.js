@@ -8,43 +8,58 @@ const app = express();
 const userRoutes = require("./Backend/routes/userRoutes.js");
 const chatRoutes = require("./Backend/routes/chatRoutes.js");
 const messageRoutes = require("./Backend/routes/messageRoutes.js");
-
 const {
   notFound,
   errorHandler,
 } = require("./Backend/middlewares/errorMiddleware.js");
+
 app.use(cors({ origin: "http://localhost:3000" }));
-
-app.use(express.json()); //TO ACCEPT JSON DATA FROM THE FRONTEND
-
-//CALLING THIS FUNCTION FOR THE CONNECTION WITH DB
+app.use(express.json());
 connectDB();
 
-//HOME ROUTE
-app.get("/", (req, res) => {
-  res.send("home page");
-});
-
-//USER ROUTE
+app.get("/", (req, res) => res.send("home page"));
 app.use("/api/users", userRoutes);
-
-// CHATS ROUTE
-app.use('/api/chats',chatRoutes) ;
-
-// MESSAGES ROUTE
-app.use('/api/messages',messageRoutes) ;
-
-
-//INDIVISUAL CHAT
-app.get("/api/chats/:id", (req, res) => {
-  const id = req.params.id;
-  const singleChat = chats.find((chat) => chat._id === id);
-  res.send(singleChat);
-});
-
+app.use("/api/chats", chatRoutes);
+app.use("/api/messages", messageRoutes);
 app.use(notFound);
 app.use(errorHandler);
 
-app.listen(process.env.PORT || 8080, () => {
+const server = app.listen(process.env.PORT || 8080, () => {
   console.log("server is listening to port 8080");
+});
+
+const io = require("socket.io")(server, {
+  pingTimeout: 60000,
+  cors: { origin: "http://localhost:3000" },
+});
+
+io.on("connection", (socket) => {
+  console.log("connected to socket.io");
+
+  socket.on("setup", (userData) => {
+    socket.join(userData.id);
+    console.log("user id", userData.id);
+    socket.emit("connected");
+  });
+
+  socket.on("join chat", (room) => {
+    socket.join(room);
+    console.log("user joined room" + room);
+  });
+  socket.on("typing", (room) => socket.in(room).emit("typing"));
+  socket.on("stop typing", (room) => socket.in(room).emit("stop typing"));
+  socket.on("new message", (newMessageReceived) => {
+    var chat = newMessageReceived.chat;
+    console.log("chat", chat);
+    if (!chat.users) return console.log("chat.users not defined");
+
+    chat.users.forEach((user) => {
+      if (user._id === newMessageReceived.sender._id) return;
+      socket.in(user._id).emit("message received", newMessageReceived);
+    });
+  });
+  socket.off("setup",() => {
+    console.log("USER DISCONNECTED");
+    socket.leave(userData.id)
+  })
 });
