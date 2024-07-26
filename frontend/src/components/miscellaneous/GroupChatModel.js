@@ -30,12 +30,15 @@ export const GroupChatModel = ({ children }) => {
   const toast = useToast();
   const { user, chats, setChats } = useChat();
 
+  // Define BASE_URL
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
+
   const handleSearch = async (query) => {
     setSearch(query);
     if (!query) {
+      setSearchResult([]);
       return;
     }
-    console.log(query);
     try {
       setLoading(true);
       const config = {
@@ -44,13 +47,11 @@ export const GroupChatModel = ({ children }) => {
         },
       };
       const response = await axios.get(
-        `http://localhost:8080/api/users/signUp?search=${query}`,
+        `${BASE_URL}/api/users?search=${query}`, // Updated URL
         config
       );
-      const results = response.data;
-      console.log("logged", results);
+      setSearchResult(response.data);
       setLoading(false);
-      setSearchResult(results);
     } catch (error) {
       toast({
         title: "Error occurred!",
@@ -59,6 +60,7 @@ export const GroupChatModel = ({ children }) => {
         isClosable: true,
         position: "bottom-left",
       });
+      setLoading(false);
     }
   };
 
@@ -102,15 +104,14 @@ export const GroupChatModel = ({ children }) => {
         },
       };
       const response = await axios.post(
-        "http://localhost:8080/api/chats/group",
+        `${BASE_URL}/api/chats/group`, // Updated URL
         {
           name: groupChatName,
           users: selectedUsers,
         },
         config
       );
-      const result = response.data;
-      setChats([result, ...chats]);
+      setChats([response.data, ...chats]);
       onClose();
       toast({
         title: "Success",

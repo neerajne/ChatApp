@@ -21,7 +21,8 @@ import { ScrollableChat } from "./ScrollableChat.js";
 import Lottie from "react-lottie";
 import io from "socket.io-client";
 import animationData from "../animations/typing.json";
-const ENDPOINT = "http://localhost:8080";
+
+const ENDPOINT = "https://quickchatapp.onrender.com"; // Updated to deployed backend URL
 var socket, selectedChatCompare;
 
 export const SingleChat = ({ fetchAgain, setFetchAgain }) => {
@@ -63,7 +64,7 @@ export const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         },
       };
       const { data } = await axios.get(
-        `http://localhost:8080/api/messages/${selectedChats._id}`,
+        `https://quickchatapp.onrender.com/api/messages/${selectedChats._id}`,
         config
       );
       setMessages(data);
@@ -128,7 +129,7 @@ export const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           },
         };
         const { data } = await axios.post(
-          "http://localhost:8080/api/messages/",
+          "https://quickchatapp.onrender.com/api/messages/",
           {
             content: newMessage,
             chatId: selectedChats._id,

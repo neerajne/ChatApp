@@ -20,7 +20,6 @@ import {
   useDisclosure,
   useToast,
   Spinner,
-  Badge,
 } from "@chakra-ui/react";
 import { BellIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import axios from "axios";
@@ -30,6 +29,9 @@ import { useNavigate } from "react-router-dom";
 import { ChatLoading } from "../ChatLoading.js";
 import { UserListItem } from "../userAvatar/UserListItem.js";
 import { getSender } from "../../config/chatLogic.js";
+
+const API_BASE_URL =
+  process.env.REACT_APP_API_BASE_URL || "https://quickchatapp.onrender.com";
 
 export const SideDrawer = () => {
   const [search, setSearch] = useState("");
@@ -73,7 +75,7 @@ export const SideDrawer = () => {
         },
       };
       const response = await axios.get(
-        `http://localhost:8080/api/users/signUp?search=${search}`,
+        `${API_BASE_URL}/api/users/signUp?search=${search}`,
         config
       );
       const data = response.data;
@@ -113,7 +115,7 @@ export const SideDrawer = () => {
         },
       };
       const response = await axios.post(
-        "http://localhost:8080/api/chats/",
+        `${API_BASE_URL}/api/chats/`,
         { userId },
         config
       );
@@ -170,7 +172,6 @@ export const SideDrawer = () => {
               <Box position="relative" display="inline-block">
                 <BellIcon fontSize="2xl" m={1} />
                 {notification.length > 0 && (
-              
                   <Box
                     position="absolute"
                     top="-2px"

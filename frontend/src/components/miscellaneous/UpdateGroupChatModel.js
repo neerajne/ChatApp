@@ -22,7 +22,14 @@ import { UserBadgeItem } from "../userAvatar/UserBadgeItem.js";
 import axios from "axios";
 import { UserListItem } from "../userAvatar/UserListItem.js";
 
-export const UpdateGroupChatModel = ({ fetchAgain, setFetchAgain, fetchMessages }) => {
+const API_BASE_URL =
+  process.env.REACT_APP_API_BASE_URL || "https://quickchatapp.onrender.com";
+
+export const UpdateGroupChatModel = ({
+  fetchAgain,
+  setFetchAgain,
+  fetchMessages,
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
@@ -32,7 +39,7 @@ export const UpdateGroupChatModel = ({ fetchAgain, setFetchAgain, fetchMessages 
   const { user, selectedChats, setSelectedChats, chats, setChats } = useChat();
   const toast = useToast();
 
-  const handleLeaveGroup = async ({}) => {
+  const handleLeaveGroup = async () => {
     console.log("handleLeaveGroup called"); // Debug log
 
     if (!user) {
@@ -83,7 +90,7 @@ export const UpdateGroupChatModel = ({ fetchAgain, setFetchAgain, fetchMessages 
         },
       };
       const response = await axios.put(
-        "http://localhost:8080/api/chats/groupRemove",
+        `${API_BASE_URL}/api/chats/groupRemove`,
         {
           chatId: selectedChats._id,
           removeUser: user._id,
@@ -144,7 +151,7 @@ export const UpdateGroupChatModel = ({ fetchAgain, setFetchAgain, fetchMessages 
         },
       };
       const response = await axios.put(
-        "http://localhost:8080/api/chats/rename",
+        `${API_BASE_URL}/api/chats/rename`,
         {
           chatId: selectedChats._id,
           newName: groupChatName,
@@ -162,7 +169,7 @@ export const UpdateGroupChatModel = ({ fetchAgain, setFetchAgain, fetchMessages 
       });
       setSelectedChats(data);
       setRenameLoading(false);
-      
+
       setFetchAgain(!fetchAgain); // Optionally trigger a re-fetch
       onClose(); // Close the modal after renaming
       setGroupChatName("");
@@ -210,7 +217,7 @@ export const UpdateGroupChatModel = ({ fetchAgain, setFetchAgain, fetchMessages 
         },
       };
       const response = await axios.put(
-        "http://localhost:8080/api/chats/groupRemove",
+        `${API_BASE_URL}/api/chats/groupRemove`,
         {
           chatId: selectedChats._id,
           removeUser: u._id,
@@ -279,7 +286,7 @@ export const UpdateGroupChatModel = ({ fetchAgain, setFetchAgain, fetchMessages 
         },
       };
       const response = await axios.put(
-        "http://localhost:8080/api/chats/groupAdd",
+        `${API_BASE_URL}/api/chats/groupAdd`,
         {
           chatId: selectedChats._id,
           newUser: newuser1._id, // Use the passed user object correctly
@@ -326,7 +333,7 @@ export const UpdateGroupChatModel = ({ fetchAgain, setFetchAgain, fetchMessages 
         },
       };
       const response = await axios.get(
-        `http://localhost:8080/api/users/signUp?search=${query}`,
+        `${API_BASE_URL}/api/users/signUp?search=${query}`,
         config
       );
       const results = response.data;
@@ -411,7 +418,7 @@ export const UpdateGroupChatModel = ({ fetchAgain, setFetchAgain, fetchMessages 
             )}
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="red" mr={3} onClick={() => handleLeaveGroup()}>
+            <Button colorScheme="red" mr={3} onClick={handleLeaveGroup}>
               Leave Group
             </Button>
           </ModalFooter>

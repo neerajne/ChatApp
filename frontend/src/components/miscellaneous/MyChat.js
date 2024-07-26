@@ -15,17 +15,14 @@ export const MyChat = ({ fetchAgain, setFetchAgain }) => {
   useEffect(() => {
     const userInfo = JSON.parse(localStorage.getItem("userInformation"));
     setLoggedUser(userInfo);
-    console.log(loggedUser);
     fetchChats();
-  }, []);
+  }, [user, fetchAgain]); // Added dependencies
 
   const fetchChats = async () => {
-    console.log(user)
-     if (!user || !user.token) {
-       console.log("No user or token available");
-       return;
-     }
-    console.log(user);
+    if (!user || !user.token) {
+      console.log("No user or token available");
+      return;
+    }
     try {
       const config = {
         headers: {
@@ -33,7 +30,7 @@ export const MyChat = ({ fetchAgain, setFetchAgain }) => {
         },
       };
       const response = await axios.get(
-        "http://localhost:8080/api/chats",
+        `${process.env.REACT_APP_BASE_URL}/api/chats`, // Use BASE_URL
         config
       );
       const result = response.data;

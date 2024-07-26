@@ -21,7 +21,10 @@ export const Login = () => {
   });
   const navigate = useNavigate();
 
-  //BUTTON HANDLER FUNCTION FOR LOGIN
+  // Define BASE_URL
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
+
+  // BUTTON HANDLER FUNCTION FOR LOGIN
   const submitHandler = async () => {
     if (!data.email || !data.password) {
       toast({
@@ -41,7 +44,7 @@ export const Login = () => {
       };
       console.log("Sending login request with data:", data);
       const response = await axios.post(
-        "http://localhost:8080/api/users/login",
+        `${BASE_URL}/api/users/login`, // Use BASE_URL here
         data,
         config
       );
@@ -57,7 +60,7 @@ export const Login = () => {
       });
       localStorage.setItem("userInformation", JSON.stringify(response.data));
 
-      //SETTIMEOUT FUNCTION FOR DEPLAYING TO REDIRECT ME IMMEDIATELY TO THE CHATS PAGE SO THAT MY TOAST CAN OCCUR
+      // SETTIMEOUT FUNCTION FOR DELAYING TO REDIRECT ME IMMEDIATELY TO THE CHATS PAGE SO THAT MY TOAST CAN OCCUR
       setTimeout(() => {
         navigate("/chats");
       }, 1000);
@@ -78,7 +81,7 @@ export const Login = () => {
     }
   };
 
-  //GUEST USER CREDENTIALS FUNCTION
+  // GUEST USER CREDENTIALS FUNCTION
   const GetGuestUserCredentials = async (e) => {
     const guestData = {
       email: "guestUser@gmail.com",
@@ -95,7 +98,7 @@ export const Login = () => {
       };
       console.log("Sending login request with data:", guestData);
       const response = await axios.post(
-        "http://localhost:8080/api/users/login",
+        `${BASE_URL}/api/users/login`, // Use BASE_URL here
         guestData,
         config
       );
@@ -111,7 +114,7 @@ export const Login = () => {
       });
       localStorage.setItem("userInformation", JSON.stringify(response.data));
 
-      //SETTIMEOUT FUNCTION FOR DEPLAYING TO REDIRECT ME IMMEDIATELY TO THE CHATS PAGE SO THAT MY TOAST CAN OCCUR
+      // SETTIMEOUT FUNCTION FOR DELAYING TO REDIRECT ME IMMEDIATELY TO THE CHATS PAGE SO THAT MY TOAST CAN OCCUR
       setTimeout(() => {
         navigate("/chats");
       }, 1000);
@@ -133,7 +136,7 @@ export const Login = () => {
     console.log(data);
   };
 
-  //I PUT HANDLER FUNCTION FOR LOGIN
+  // I PUT HANDLER FUNCTION FOR LOGIN
   const onChangeHandler = (e) => {
     e.preventDefault();
     const name = e.target.name;

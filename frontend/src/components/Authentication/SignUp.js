@@ -12,7 +12,6 @@ import { Input } from "@chakra-ui/react";
 import { useState } from "react";
 import { useToast } from "@chakra-ui/react";
 
-// DATA FOR USER
 export const SignUp = () => {
   const [show, setShow] = useState(false);
   const toast = useToast();
@@ -25,6 +24,9 @@ export const SignUp = () => {
   });
   const [pic, setPic] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // Define BASE_URL
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
 
   // FUNCTION FOR SIGNUP THE USER
   const onChangeHandler = (e) => {
@@ -66,7 +68,7 @@ export const SignUp = () => {
         },
       };
       const response = await axios.post(
-        "http://localhost:8080/api/users/signUp",
+        `${BASE_URL}/api/users/signUp`, // Use BASE_URL here
         { ...data, pic },
         config
       );
