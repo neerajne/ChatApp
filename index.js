@@ -14,7 +14,13 @@ const {
   errorHandler,
 } = require("./Backend/middlewares/errorMiddleware.js");
 
-app.use(cors({ origin: "http://localhost:3000" }));
+const corsOptions = {
+  origin: "https://astonishing-babka-f45e2c.netlify.app", // Replace with your frontend URL
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 connectDB();
 
