@@ -37,8 +37,10 @@ const server = app.listen(process.env.PORT || 8080, () => {
 });
 
 const io = require("socket.io")(server, {
-  pingTimeout: 60000,
-  cors: { origin: "http://localhost:3000" },
+  cors: {
+    origin: "https://astonishing-babka-f45e2c.netlify.app", // Your Netlify domain
+    methods: ["GET", "POST"],
+  },
 });
 
 io.on("connection", (socket) => {
