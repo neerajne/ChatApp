@@ -7,6 +7,7 @@ const connectDB = require("./Backend/models/mongooseConnection.js");
 const app = express();
 const userRoutes = require("./Backend/routes/userRoutes.js");
 const chatRoutes = require("./Backend/routes/chatRoutes.js");
+const path = require("path");
 const messageRoutes = require("./Backend/routes/messageRoutes.js");
 const {
   notFound,
@@ -21,6 +22,21 @@ app.get("/", (req, res) => res.send("home page"));
 app.use("/api/users", userRoutes);
 app.use("/api/chats", chatRoutes);
 app.use("/api/messages", messageRoutes);
+
+//<-----------------------Deployment-------------------------->
+const __dirname1 = path.resolve();
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname1, "/frontend/build")));
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname1, "frontend", "build", "index.html"));
+  });
+} else {
+  app.get("/", (req, res) => {
+    res.send("API is running successfully");
+  });
+}
+//<-----------------------Deployment-------------------------->
+
 app.use(notFound);
 app.use(errorHandler);
 
@@ -58,8 +74,8 @@ io.on("connection", (socket) => {
       socket.in(user._id).emit("message received", newMessageReceived);
     });
   });
-  socket.off("setup",() => {
+  socket.off("setup", () => {
     console.log("USER DISCONNECTED");
-    socket.leave(userData.id)
-  })
+    socket.leave(userData.id);
+  });
 });
