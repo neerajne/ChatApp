@@ -26,6 +26,7 @@ export const Login = () => {
 
   // BUTTON HANDLER FUNCTION FOR LOGIN
   const submitHandler = async () => {
+    console.log("Submit Handler Called");
     if (!data.email || !data.password) {
       toast({
         title: "Important ",
@@ -42,7 +43,7 @@ export const Login = () => {
           "Content-type": "application/json",
         },
       };
-      console.log("Sending login request with data:", data);
+      // console.log("Sending login request with data:", data);
       const response = await axios.post(
         `${BASE_URL}/api/users/login`, // Use BASE_URL here
         data,
@@ -83,6 +84,7 @@ export const Login = () => {
 
   // GUEST USER CREDENTIALS FUNCTION
   const GetGuestUserCredentials = async (e) => {
+    console.log("guesr user Handler Called");
     const guestData = {
       email: "guestUser@gmail.com",
       password: "guestUser",

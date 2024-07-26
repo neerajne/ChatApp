@@ -15,8 +15,8 @@ export const MyChat = ({ fetchAgain, setFetchAgain }) => {
   useEffect(() => {
     const userInfo = JSON.parse(localStorage.getItem("userInformation"));
     setLoggedUser(userInfo);
-    fetchChats();
-  }, [user, fetchAgain]); // Added dependencies
+    fetchChats(); // Call fetchChats directly without dependency on `fetchAgain`
+  }, [user]); // Dependency on `user` only
 
   const fetchChats = async () => {
     if (!user || !user.token) {
@@ -42,7 +42,6 @@ export const MyChat = ({ fetchAgain, setFetchAgain }) => {
         isClosable: true,
         position: "bottom-left",
       });
-      setFetchAgain(!fetchAgain);
     } catch (error) {
       toast({
         title: "Error fetching chats",
