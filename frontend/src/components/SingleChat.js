@@ -93,9 +93,11 @@ export const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   }, []);
 
   useEffect(() => {
-    fetchMessages();
-    selectedChatCompare = selectedChats;
-  }, [selectedChats]);
+    if (selectedChats) {
+      fetchMessages();
+      selectedChatCompare = selectedChats;
+    }
+  }, [selectedChats?._id]); // Only re-run if the chat ID changes
   console.log(notification);
 
   useEffect(() => {
