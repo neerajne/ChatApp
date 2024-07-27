@@ -15,8 +15,10 @@ export const MyChat = ({ fetchAgain, setFetchAgain }) => {
   useEffect(() => {
     const userInfo = JSON.parse(localStorage.getItem("userInformation"));
     setLoggedUser(userInfo);
-    fetchChats(); // Call fetchChats directly without dependency on `fetchAgain`
-  }, [user]); // Dependency on `user` only
+    if (user && user.token) {
+      fetchChats();
+    }
+  }, [user?.token]); // Only re-run if the user's token changes // Dependency on `user` only
 
   const fetchChats = async () => {
     if (!user || !user.token) {

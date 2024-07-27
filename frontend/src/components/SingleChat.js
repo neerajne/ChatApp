@@ -120,41 +120,37 @@ export const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     });
   }, []);
 
-  const sendMessage = async (e) => {
-    if (e.key === "Enter" && newMessage) {
-      socket.emit("stop typing", selectedChats._id);
-      try {
-        setLoading(true);
-        const config = {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        };
-        const { data } = await axios.post(
-          "https://quickchatapp.onrender.com/api/messages/",
-          {
-            content: newMessage,
-            chatId: selectedChats._id,
-          },
-          config
-        );
-        socket.emit("new message", data);
-        setMessages((prevMessages) => [...prevMessages, data]);
-        setNewMessage("");
-        setLoading(false);
-      } catch (error) {
-        toast({
-          title: "Error sending message!",
-          status: "error",
-          duration: 4000,
-          isClosable: true,
-          position: "bottom-left",
-        });
-        setLoading(false);
-      }
+const sendMessage = async (e) => {
+  if (e.key === "Enter" && newMessage) {
+    socket.emit("stop typing", selectedChats._id);
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+      const { data } = await axios.post(
+        "https://quickchatapp.onrender.com/api/messages/",
+        {
+          content: newMessage,
+          chatId: selectedChats._id,
+        },
+        config
+      );
+      socket.emit("new message", data);
+      setMessages((prevMessages) => [...prevMessages, data]);
+      setNewMessage("");
+    } catch (error) {
+      toast({
+        title: "Error sending message!",
+        status: "error",
+        duration: 4000,
+        isClosable: true,
+        position: "bottom-left",
+      });
     }
-  };
-
+  }
+};
   const typingHandler = (e) => {
     setNewMessage(e.target.value);
     if (!socketConnection) return;
