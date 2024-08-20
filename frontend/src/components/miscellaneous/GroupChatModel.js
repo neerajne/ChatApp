@@ -53,8 +53,13 @@ export const GroupChatModel = ({ children }) => {
       setSearchResult(response.data);
       setLoading(false);
     } catch (error) {
+      console.error(
+        "Error during user search:",
+        error.response?.data || error.message
+      );
       toast({
         title: "Error occurred!",
+        description: error.response?.data?.message || error.message,
         status: "error",
         duration: 4000,
         isClosable: true,
