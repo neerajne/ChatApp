@@ -31,7 +31,8 @@ export const GroupChatModel = ({ children }) => {
   const { user, chats, setChats } = useChat();
 
   // Define BASE_URL
-  const BASE_URL = process.env.REACT_APP_BASE_URL;
+  const BASE_URL =
+    process.env.REACT_APP_BASE_URL || "https://quickchatapp.onrender.com";
 
   const handleSearch = async (query) => {
     setSearch(query);
@@ -47,7 +48,8 @@ export const GroupChatModel = ({ children }) => {
         },
       };
       const response = await axios.get(
-        `${BASE_URL}/api/users?search=${query}`, // Updated URL
+        `${BASE_URL}/api/users?search=${query}`,
+        // Updated URL
         config
       );
       setSearchResult(response.data);

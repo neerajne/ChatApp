@@ -74,6 +74,7 @@ export const SideDrawer = () => {
           Authorization: `Bearer ${user.token}`,
         },
       };
+      console.log("searching user neeraj");
       const response = await axios.get(
         `${API_BASE_URL}/api/users/signUp?search=${search}`,
         config
