@@ -15,8 +15,7 @@ const {
 } = require("./Backend/middlewares/errorMiddleware.js");
 
 const corsOptions = {
-  origin: "https://connectflock.netlify.app", // Replace with your frontend URL
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  origin: "https://connectflock.netlify.app/",  methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
 };
 

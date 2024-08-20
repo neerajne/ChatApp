@@ -20,7 +20,7 @@ const userSchema = new Schema({
   },
   pic: {
     type: String,
-    required: true,
+    // required: true,
     default:
       "https://images.wallpapersden.com/image/download/satoru-gojo-jujutsu-kaisen_bGhlZm2UmZqaraWkpJRmZ2VlrWZuZ2U.jpg",
   },
