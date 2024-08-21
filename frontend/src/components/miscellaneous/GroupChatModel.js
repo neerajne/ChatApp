@@ -48,7 +48,7 @@ export const GroupChatModel = ({ children }) => {
         },
       };
       const response = await axios.get(
-        `${BASE_URL}/api/users?search=${query}`,
+        `${BASE_URL}/api/users/signUp?search=${query}`,
         // Updated URL
         config
       );
