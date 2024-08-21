@@ -14,18 +14,18 @@ const {
   errorHandler,
 } = require("./Backend/middlewares/errorMiddleware.js");
 
-// const corsOptions = {
-//   origin: "https://connectflock.netlify.app",
-//   methods: ["GET", "POST", "PUT", "DELETE"],
-//   allowedHeaders: ["Content-Type", "Authorization"],
-// };
-
-// app.use(cors(corsOptions));
+// CORS Configuration
 app.use(
   cors({
-    origin: "*",
+    origin: [
+      "https://connectflock.netlify.app",
+      "https://main--connectflock.netlify.app",
+    ], // Allow multiple origins
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true, // Enable credentials (cookies, authorization headers)
   })
 );
+
 app.use(express.json());
 connectDB();
 
@@ -41,10 +41,15 @@ const server = app.listen(process.env.PORT || 8080, () => {
   console.log("server is listening to port 8080");
 });
 
+// Updated Socket.IO CORS Configuration
 const io = require("socket.io")(server, {
   cors: {
-    origin: "https://connectflock.netlify.app", // Your Netlify domain
+    origin: [
+      "https://connectflock.netlify.app",
+      "https://main--connectflock.netlify.app",
+    ], // Allow multiple origins
     methods: ["GET", "POST"],
+    credentials: true, // Enable credentials (cookies, authorization headers)
   },
 });
 
@@ -61,8 +66,10 @@ io.on("connection", (socket) => {
     socket.join(room);
     console.log("user joined room" + room);
   });
+
   socket.on("typing", (room) => socket.in(room).emit("typing"));
   socket.on("stop typing", (room) => socket.in(room).emit("stop typing"));
+
   socket.on("new message", (newMessageReceived) => {
     var chat = newMessageReceived.chat;
     console.log("chat", chat);
@@ -73,6 +80,7 @@ io.on("connection", (socket) => {
       socket.in(user._id).emit("message received", newMessageReceived);
     });
   });
+
   socket.off("setup", () => {
     console.log("USER DISCONNECTED");
     socket.leave(userData.id);
