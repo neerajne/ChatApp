@@ -14,12 +14,18 @@ const {
   errorHandler,
 } = require("./Backend/middlewares/errorMiddleware.js");
 
-const corsOptions = {
-  origin: "https://connectflock.netlify.app/",  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-};
+// const corsOptions = {
+//   origin: "https://connectflock.netlify.app",
+//   methods: ["GET", "POST", "PUT", "DELETE"],
+//   allowedHeaders: ["Content-Type", "Authorization"],
+// };
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 app.use(express.json());
 connectDB();
 
